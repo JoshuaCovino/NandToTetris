@@ -1,0 +1,3 @@
+push constant 3
+not 
+pop static 0

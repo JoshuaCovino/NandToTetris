@@ -1,0 +1,28 @@
+// Contains a function Fib.fib that calculates and returns the nth Fibonacci number recursively
+// n is supplied as an argument
+
+// Put your code here.
+
+function Fib.fib 0
+
+push argument 0
+push constant 2
+lt                     // check if n < 2
+if-goto IS_TRUE
+goto IS_FALSE
+
+label IS_TRUE          // Base case. If n < 2 return 
+push argument 0        
+return
+label IS_FALSE         // if n>=2 return fib(n-2) + fib(n-1)
+push argument 0
+push constant 2
+sub
+call Fib.fib 1         // calculate fib(n-2)
+push argument 0
+push constant 1
+sub
+call Fib.fib 1         // calculate fib(n-1)
+add                    // return fib(n-1) + fib(n-2)
+return
+

@@ -1,0 +1,3 @@
+push constant 3
+neg
+pop local 0

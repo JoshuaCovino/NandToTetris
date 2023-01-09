@@ -1,0 +1,56 @@
+// File name: Jump.hdl
+
+/**
+ * The jump unit determines whether the Program Counter should jump.
+ * A jump is performed if any of the j1 j2 j3 bits of the c-instruction 
+ * are true, AND the matching condition is met:
+ *   j1: jump if ALU output is < 0
+ *   j2: jump if ALU output   == 0
+ *   j3: jump if ALU output is > 0
+ * If multiple of these bits are set true, then jump if any of 
+ * those conditions are met,
+ * e.g. if j1 and j2 are both set true, jump if < 0 or == 0 
+ * The ALU output is determined through the zr and ng wires:
+ *   zr: is true when the ALU's output   == 0, false otherwise
+ *   ng: is true when the ALU's output is < 0, false otherwise
+ * If both zr and ng are false, then the ALU's output is > 0
+ */
+
+CHIP Jump {
+
+    IN  j1,             // c-instruction j1
+        j2,             // c-instruction j2
+        j3,             // c-instruction j3
+        zr,             // zr pin from ALU
+        ng;             // ng pin from ALU
+
+    OUT jump;           // true if a jump should be performed, false otherwise 
+
+PARTS:
+    // 000 : nil : No jump
+    // 001 : JGT : If out >  0 jump
+    // 010 : JEQ : If out == 0 jump
+    // 011 : JGE : If out >= 0 jump
+    // 100 : JLT : If out <  0 jump
+    // 101 : JNE : If out != 0 jump
+    // 110 : JLE : If out <= 0 jump
+    // 111 : JMP : Jump
+
+    //Checking to see if the instruction is a C type
+    Or(a=j1, b=j2, out=c);
+    Or(a=c, b=j3, out=isC);
+
+    Or(a=zr, b=ng, out=lte);
+    Not(in=lte, out=GT);
+
+    And(a=j1, b=ng, out=jumpIfLT);
+    And(a=j2, b=zr, out=jumpIfEQ);
+    And(a=j3, b=GT, out=jumpIfGT);
+
+    Or(a=jumpIfLT, b=jumpIfGT, out=jumpIfLTGT);
+    Or(a=jumpIfLTGT, b=jumpIfEQ, out=temp);
+
+    And(a=temp, b=isC, out=jump);
+
+
+}

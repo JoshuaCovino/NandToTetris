@@ -1,0 +1,7 @@
+push constant 3
+push constant 3
+eq
+if-goto END
+
+label END
+goto END

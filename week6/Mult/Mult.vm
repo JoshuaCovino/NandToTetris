@@ -1,0 +1,65 @@
+// Calculates a = x*y
+// a is a local variable
+// x & y are static variables
+
+// Put your code here.
+
+push static 0
+pop static 4 //temp for x
+push static 1
+pop static 5 // temp for y
+
+push constant 0
+pop local 0
+
+push static 5
+push static 4
+gt
+if-goto SWAP
+
+label CONTINUE
+push static 5
+pop static 2 // This is going to be the counter
+
+push static 2
+push constant 0 
+gt
+if-goto LOOP
+
+push static 2
+neg
+pop static 2
+push static 4
+neg
+pop static 4
+
+label LOOP
+
+push static 2
+push constant 0
+eq
+if-goto END
+
+push static 4
+push local 0
+add
+pop local 0
+
+push static 2
+push constant 1
+sub
+pop static 2
+goto LOOP
+
+label SWAP
+push static 4 
+pop static 2 // static 2 = x
+push static 5 // y on stack
+pop static 4 // y = x
+push static 2
+pop static 5
+goto CONTINUE
+
+
+label END
+goto END
